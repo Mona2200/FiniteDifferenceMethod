@@ -129,12 +129,16 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Repository.cpp" />
+    <ClCompile Include="MatrixBuilding.cpp" />
     <ClCompile Include="Solving.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="BoundaryConditions.txt" />
     <Text Include="Functions.txt" />
     <Text Include="Mesh.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

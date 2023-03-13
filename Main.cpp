@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "Solving.cpp"
+#include "Header.h"
 using namespace std;
 
 void main()
@@ -21,10 +21,10 @@ void main()
    readerMesh.close();
 
 
-   boundary = new int[5];
+   boundary = new int[8];
    ifstream readerCond("BoundaryConditions.txt");
 
-   for (int i = 0; i < 5; i++)
+   for (int i = 0; i < 8; i++)
       readerCond >> boundary[i];
 
    readerCond.close();
@@ -33,5 +33,24 @@ void main()
    readerFunc >> UNumber >> FNumber >> lambda >> gamma;
    readerFunc.close();
 
-   InitSolving();
+   InitMatrix();
+   InitSolving(1000, 1e-14);
+
+   for (int i = 0; i < 8; i++)
+      cout << boundary[i] << " ";
+
+      cout << endl;
+
+      for (int i = 0; i < nX; i++)
+         cout << X[i] << " ";
+
+      cout << endl;
+
+      for (int i = 0; i < nY; i++)
+         cout << Y[i] << " ";
+
+      cout << endl;
+
+   for (int i = 0; i < N; i++)
+   cout << x[i] << " ";
 }

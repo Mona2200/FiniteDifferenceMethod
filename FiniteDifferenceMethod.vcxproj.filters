@@ -21,6 +21,9 @@
     <ClCompile Include="Repository.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="MatrixBuilding.cpp">
+      <Filter>Файлы ресурсов</Filter>
+    </ClCompile>
     <ClCompile Include="Solving.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
@@ -35,5 +38,10 @@
     <Text Include="Functions.txt">
       <Filter>Исходные файлы</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Header.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
