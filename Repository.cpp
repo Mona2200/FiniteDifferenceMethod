@@ -13,7 +13,7 @@ double U(double x, double y)
    switch (uN)
    {
    case 1:
-      return 2 * x + 4 * y;
+      return x + y;
 
    case 2:
       return 2 * x * x + 4 * y * x;
@@ -35,7 +35,7 @@ double F(double x, double y)
    switch (fN)
    {
    case 1:
-      return 6 * x + 12 * y;
+      return 2 * x + 2 * y;
 
    case 2:
       return 6 * x + 12 * y;

@@ -15,6 +15,10 @@ void InitSolving(int _iter, double _eps);
 void Solve();
 double Norm(double* vector);
 
+void GaussSeidelMethod();
+double multiplyUpperLineByVector(int line, double* x);
+double multiplyLowerLineByVector(int line, double* x);
+
 extern double* di, * au1, * au2, * al1, * al2, * f, * x;
 extern int N;
 

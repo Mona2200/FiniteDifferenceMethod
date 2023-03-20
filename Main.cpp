@@ -30,27 +30,15 @@ void main()
    readerCond.close();
 
    ifstream readerFunc("Functions.txt");
-   readerFunc >> UNumber >> FNumber >> lambda >> gamma;
+   readerFunc >> UNumber >> FNumber >> lambda >> gamma >> beta;
    readerFunc.close();
 
    InitMatrix();
    InitSolving(1000, 1e-14);
 
-   for (int i = 0; i < 8; i++)
-      cout << boundary[i] << " ";
-
-      cout << endl;
-
-      for (int i = 0; i < nX; i++)
-         cout << X[i] << " ";
-
-      cout << endl;
-
-      for (int i = 0; i < nY; i++)
-         cout << Y[i] << " ";
-
-      cout << endl;
-
    for (int i = 0; i < N; i++)
-   cout << x[i] << " ";
+   {
+      printf("%.14f\t", x[i]);
+   }
+      cout << endl;
 }

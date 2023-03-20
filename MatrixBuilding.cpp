@@ -15,7 +15,8 @@ void InitMatrix()
    gX++; gY++;
    al_shift = gX, au_shift = nX;
 
-   N = gX * (nY - gY) + nX * gY - 1;
+   N = gX *  (gY - 1) + nX * (nY - gY + 1);
+   //N = 20;
 
    di = new double[N];
    au1 = new double[N];
@@ -29,6 +30,10 @@ void InitMatrix()
    {
       di[i] = 1;
       x[i] = 0;
+      au1[i] = 0;
+      au2[i] = 0;
+      al1[i] = 0;
+      al2[i] = 0;
    }
 
    InitRepository(UNumber, FNumber);
@@ -37,19 +42,20 @@ void InitMatrix()
 
 void CreateMatrix() {
    int index = 0;
-   double hx1, hx2, hY_1, hY_2, ubeta, beta = 1.;
+   double hx1, hx2, hY_1, hY_2, ubeta;
 
    f[0] = U(X[0], Y[0]); //левая нижняя точка
+   index++;
 
    // Нижняя линия области "Г"
    hY_1 = abs(Y[0] - Y[1]);
    for (int i = 1; i < gX - 1; i++, index++) {
-      f[index] = U(X[i], Y[i]);
+      f[index] = U(X[i], Y[0]);
       if (boundary[0] == 3) {
-         ubeta = -lambda * rightDerivativeByY(X[i], Y[i]) / beta + U(X[i], Y[i]);
+         ubeta = lambda * rightDerivativeByY(X[i], Y[0]) / beta + U(X[i], Y[0]);
          di[index] = lambda / hY_1 + beta;
          au1[index] = -lambda / hY_1;
-         f[index] = -lambda * rightDerivativeByY(X[i], Y[i]) + beta * (U(X[i], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = -lambda * rightDerivativeByY(X[i], Y[0]) + beta * (U(X[i], Y[0]) - ubeta) + beta * ubeta;
       }
    }
 
@@ -61,11 +67,11 @@ void CreateMatrix() {
       hY_2 = abs(Y[i + 1] - Y[i]);
       f[index] = U(X[0], Y[i]);
       if (boundary[1] == 3) { // Левое краевое
-         ubeta = -lambda * rightDerivativeByX(X[i], Y[i]) / beta + U(X[0], Y[i]);
+         ubeta = lambda * rightDerivativeByX(X[0], Y[i]) / beta + U(X[0], Y[i]);
          hx1 = abs(X[0] - X[1]);
          di[index] = lambda / hY_1 + beta;
          au2[index] = -lambda / hY_1;
-         f[index] = -lambda * rightDerivativeByX(X[i], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = -lambda * rightDerivativeByX(X[0], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
       }
       index++;
 
@@ -82,11 +88,11 @@ void CreateMatrix() {
 
       f[index] = U(X[gX - 1], Y[i]);
       if (boundary[2] == 3) { // Правое краевое
-         ubeta = lambda * leftDerivativeByX(X[i], Y[i]) / beta + U(X[0], Y[i]);
+         ubeta = lambda * leftDerivativeByX(X[gX - 1], Y[i]) / beta + U(X[gX - 1], Y[i]);
          hx1 = abs(X[gX - 1] - X[gX - 2]);
          di[index] = lambda / hY_1 + beta;
          al2[index - al_shift] = -lambda / hY_1;
-         f[index] = lambda * leftDerivativeByX(X[i], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = lambda * leftDerivativeByX(X[gX - 1], Y[i]) + beta * (U(X[gX - 1], Y[i]) - ubeta) + beta * ubeta;
       }
    }
 
@@ -97,11 +103,11 @@ void CreateMatrix() {
    hY_2 = abs(Y[gY] - Y[gY - 1]);
    f[index] = U(X[0], Y[gY - 1]);
    if (boundary[3] == 3) { // Левое краевое
-      ubeta = -lambda * rightDerivativeByX(X[index], Y[index]) / beta + U(X[0], Y[index]);
+      ubeta = lambda * rightDerivativeByX(X[0], Y[gY - 1]) / beta + U(X[0], Y[gY - 1]);
       hx1 = abs(X[0] - X[1]);
       di[index] = lambda / hY_1 + beta;
       au2[index] = -lambda / hY_1;
-      f[index] = -lambda * rightDerivativeByX(X[index], Y[index]) + beta * (U(X[0], Y[index]) - ubeta) + beta * ubeta;
+      f[index] = -lambda * rightDerivativeByX(X[0], Y[gY - 1]) + beta * (U(X[0], Y[gY - 1]) - ubeta) + beta * ubeta;
    }
    index++;
 
@@ -119,10 +125,10 @@ void CreateMatrix() {
    for (int i = gX; i < nX - 1; i++, index++) {
       f[index] = U(X[i], Y[gY - 1]);
       if (boundary[4] == 3) {
-         ubeta = -lambda * rightDerivativeByY(X[i], Y[i]) / beta + U(X[i], Y[i]);
+         ubeta = lambda * rightDerivativeByY(X[i], Y[gY - 1]) / beta + U(X[i], Y[gY - 1]);
          di[index] = lambda / hY_1 + beta;
          au1[index] = -lambda / hY_1;
-         f[index] = -lambda * rightDerivativeByY(X[i], Y[i]) + beta * (U(X[i], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = -lambda * rightDerivativeByY(X[i], Y[gY - 1]) + beta * (U(X[i], Y[gY - 1]) - ubeta) + beta * ubeta;
       }
    }
    f[index] = U(X[nX - 1], Y[gY - 1]);
@@ -134,11 +140,11 @@ void CreateMatrix() {
       hY_2 = abs(Y[i + 1] - Y[i]);
       f[index] = U(X[0], Y[i]);
       if (boundary[5] == 3) { // Левое краевое
-         ubeta = -lambda * rightDerivativeByX(X[i], Y[i]) / beta + U(X[0], Y[i]);
+         ubeta = lambda * rightDerivativeByX(X[0], Y[i]) / beta + U(X[0], Y[i]);
          hx1 = abs(X[0] - X[1]);
          di[index] = lambda / hY_1 + beta;
          au2[index] = -lambda / hY_1;
-         f[index] = -lambda * rightDerivativeByX(X[i], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = -lambda * rightDerivativeByX(X[0], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
       }
       index++;
 
@@ -155,11 +161,11 @@ void CreateMatrix() {
 
       f[index] = U(X[nX - 1], Y[i]);
       if (boundary[6] == 3) { // Правое краевое
-         ubeta = lambda * leftDerivativeByX(X[i], Y[i]) / beta + U(X[0], Y[i]);
+         ubeta = lambda * leftDerivativeByX(X[nX - 1], Y[i]) / beta + U(X[nX - 1], Y[i]);
          hx1 = abs(X[gX - 1] - X[gX - 2]);
          di[index] = lambda / hY_1 + beta;
          al2[index - al_shift] = -lambda / hY_1;
-         f[index] = lambda * leftDerivativeByX(X[i], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = lambda * leftDerivativeByX(X[nX - 1], Y[i]) + beta * (U(X[nX - 1], Y[i]) - ubeta) + beta * ubeta;
       }
    }
 
@@ -170,10 +176,10 @@ void CreateMatrix() {
    for (int i = 1; i < nX - 1; i++, index++) {
       f[index] = U(X[i], Y[nY - 1]);
       if (boundary[7] == 3) {
-         ubeta = lambda * leftDerivativeByY(X[i], Y[i]) / beta + U(X[0], Y[i]);
+         ubeta = lambda * leftDerivativeByY(X[i], Y[nY - 1]) / beta + U(X[i], Y[nY - 1]);
          di[index] = lambda / hY_1 + beta;
          al1[index - 1] = -lambda / hY_1;
-         f[index] = lambda * leftDerivativeByY(X[i], Y[i]) + beta * (U(X[0], Y[i]) - ubeta) + beta * ubeta;
+         f[index] = lambda * leftDerivativeByY(X[i], Y[nY - 1]) + beta * (U(X[i], Y[nY - 1]) - ubeta) + beta * ubeta;
       }
    }
    f[index] = U(X[nX - 1], Y[nY - 1]);

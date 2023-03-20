@@ -18,6 +18,11 @@ void Solve() {
    int Iter = 0;
    norm_f = Norm(f);
 
+   double* qk, * qk1, * residual;
+   qk = new double[N];
+   qk1 = new double[N];
+   residual = new double[N];
+
    do {
       Nev = 0;
       for (int i = 0; i < N; i++) {
@@ -42,12 +47,50 @@ void Solve() {
          x[i] += omega / di[i] * (f[i] - sum);
       }
 
+      //GaussSeidelMethod();
+
       Nev = sqrt(Nev) / norm_f; /// Относительная невязка
       Iter++;
-      cout << "Iter: " << Iter << " Nev: " << Nev;
+      //cout << "Iter: " << Iter << " Nev: " << Nev;
    } while (Nev > eps &&
       Iter <= iter);
 }
+
+void GaussSeidelMethod() {
+
+   double sum;
+
+   for (int i = 0; i < N; i++) {
+      sum = multiplyUpperLineByVector(i, x);
+      sum += multiplyLowerLineByVector(i, x);
+      x[i] = x[i] + omega * (f[i] - sum) / di[i];
+   }
+}
+
+double multiplyUpperLineByVector(int line, double * x) {
+int shift = al_shift - 2;
+   double sum = 0;
+   if (line > 0) {
+      sum += al1[line - 1] * x[line - 1];
+      if (line > shift) {
+         sum += al2[line - shift] * x[line - shift];
+      }
+   }
+   return sum;
+}
+double multiplyLowerLineByVector(int line, double * x) {
+int shift = au_shift - 2;
+   double sum = 0;
+   sum += di[line] * x[line];
+   if (line < N - 1) {
+      sum += au1[line] * x[line + 1];
+      if (line < N - shift) {
+         sum += au2[line] * x[line + shift];
+      }
+   }
+   return sum;
+}
+
 
 double Norm(double* vector) {
    double norm = 0;
