@@ -38,6 +38,7 @@
     <Text Include="Functions.txt">
       <Filter>Исходные файлы</Filter>
     </Text>
+    <Text Include="Result.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">

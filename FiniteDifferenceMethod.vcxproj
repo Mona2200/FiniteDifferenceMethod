@@ -136,6 +136,7 @@
     <Text Include="BoundaryConditions.txt" />
     <Text Include="Functions.txt" />
     <Text Include="Mesh.txt" />
+    <Text Include="Result.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h" />

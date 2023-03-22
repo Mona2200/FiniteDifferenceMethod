@@ -34,11 +34,50 @@ void main()
    readerFunc.close();
 
    InitMatrix();
-   InitSolving(1000, 1e-14);
+   InitSolving(1000, 1e-14, 1);
 
-   for (int i = 0; i < N; i++)
+   double* _u = new double[N];
+
+   ofstream writer("Result.txt");
+   writer.setf(ios::scientific);
+
+   int ind = 0;
+
+   for (int i = 0; i < gY - 1; i++)
    {
-      printf("%.14f\t", x[i]);
+      for (int j = 0; j < gX; j++)
+      {
+         _u[i] = U(X[j], Y[i]);
+         writer << X[j] << "\t";
+         writer << Y[i] << "\t";
+         writer << x[ind++] << "\t";
+         writer << U(X[j], Y[i]) << "\n";
+         /*printf("%.14f\t", X[j]);
+         printf("%.14f\t", Y[i]);
+         printf("%.14f\t", x[ind++]);
+         printf("%.14f\n", U(X[j], Y[i]));*/
+      }
+         
    }
-      cout << endl;
+
+   for (int i = gY - 1; i < nY; i++)
+   {
+      for (int j = 0; j < nX; j++)
+      {
+         _u[i] = U(X[j], Y[i]);
+         writer << X[j] << "\t";
+         writer << Y[i] << "\t";
+         writer << x[ind++] << "\t";
+         writer << U(X[j], Y[i]) << "\n";
+         /*printf("%.14f\t", X[j]);
+         printf("%.14f\t", Y[i]);
+         printf("%.14f\t", x[ind++]);
+         printf("%.14f\n", U(X[j], Y[i]));*/
+      }
+
+   }
+   writer.close();
+
+   cout.setf(ios::scientific);
+   //cout << OtnNev(x, _u);
 }

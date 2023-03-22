@@ -4,8 +4,8 @@ using namespace std;
 
 double omega, iter, eps;  /// Параметр релаксации
 
-void InitSolving(int _iter, double _eps) {
-   omega = 1;
+void InitSolving(int _iter, double _eps, double _omega) {
+   omega = _omega;
    iter = _iter;
    eps = _eps;
 
@@ -18,11 +18,6 @@ void Solve() {
    int Iter = 0;
    norm_f = Norm(f);
 
-   double* qk, * qk1, * residual;
-   qk = new double[N];
-   qk1 = new double[N];
-   residual = new double[N];
-
    do {
       Nev = 0;
       for (int i = 0; i < N; i++) {
@@ -33,68 +28,45 @@ void Solve() {
          if (i >= 2)
             sum += al1[i - 1] * x[i - 1];
 
-         if (i < di_shift)
-            sum += au2[i] * x[al_shift + i];
-         else if (i < N - au_shift)
-            sum += au2[i] * x[au_shift + i];
+         if (i < dshift)
+            sum += au2[i] * x[shift1 + i];
+         else if (i < N - shift2)
+            sum += au2[i] * x[shift2 + i];
 
-         if (i >= al_shift + di_shift)
-            sum += al2[i - al_shift] * x[i - au_shift];
-         else if (i >= al_shift)
-            sum += al2[i - al_shift] * x[i - al_shift];
+         if (i >= shift1 + dshift)
+            sum += al2[i - shift1] * x[i - shift2];
+         else if (i >= shift1)
+            sum += al2[i - shift1] * x[i - shift1];
 
          Nev += (f[i] - sum) * (f[i] - sum);
          x[i] += omega / di[i] * (f[i] - sum);
       }
 
-      //GaussSeidelMethod();
-
       Nev = sqrt(Nev) / norm_f; /// Относительная невязка
       Iter++;
-      //cout << "Iter: " << Iter << " Nev: " << Nev;
+      
    } while (Nev > eps &&
       Iter <= iter);
+
+   cout << "Iter: " << Iter << " Nev: " << Nev;
 }
 
-void GaussSeidelMethod() {
-
-   double sum;
-
-   for (int i = 0; i < N; i++) {
-      sum = multiplyUpperLineByVector(i, x);
-      sum += multiplyLowerLineByVector(i, x);
-      x[i] = x[i] + omega * (f[i] - sum) / di[i];
-   }
-}
-
-double multiplyUpperLineByVector(int line, double * x) {
-int shift = al_shift - 2;
-   double sum = 0;
-   if (line > 0) {
-      sum += al1[line - 1] * x[line - 1];
-      if (line > shift) {
-         sum += al2[line - shift] * x[line - shift];
-      }
-   }
-   return sum;
-}
-double multiplyLowerLineByVector(int line, double * x) {
-int shift = au_shift - 2;
-   double sum = 0;
-   sum += di[line] * x[line];
-   if (line < N - 1) {
-      sum += au1[line] * x[line + 1];
-      if (line < N - shift) {
-         sum += au2[line] * x[line + shift];
-      }
-   }
-   return sum;
-}
-
-
-double Norm(double* vector) {
-   double norm = 0;
+double OtnNev(double* _f, double* Ax)
+{
+   double* f_ = new double[N];
    for (int i = 0; i < N; i++)
-      norm += vector[i] * vector[i];
-   return sqrt(norm);
+   {
+      f_[i] = _f[i] - Ax[i];
+   }
+   return Norm(f_) / Norm(_f);
+}
+
+double Norm(double* vector)
+{
+   double sum = 0;
+   for (int i = 0; i < N; i++)
+   {
+      sum += pow(vector[i], 2);
+   }
+   return sqrt(sum);
 }

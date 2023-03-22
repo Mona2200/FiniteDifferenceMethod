@@ -11,18 +11,20 @@ double rightDerivativeByX(double x, double y);
 double leftDerivativeByY(double x, double y);
 double leftDerivativeByX(double x, double y);
 
-void InitSolving(int _iter, double _eps);
+void InitSolving(int _iter, double _eps, double _omega);
 void Solve();
-double Norm(double* vector);
 
 void GaussSeidelMethod();
 double multiplyUpperLineByVector(int line, double* x);
 double multiplyLowerLineByVector(int line, double* x);
 
+double OtnNev(double* _f, double* Ax);
+double Norm(double* vector);
+
 extern double* di, * au1, * au2, * al1, * al2, * f, * x;
 extern int N;
 
-extern int nX, nY, gX, gY, UNumber, FNumber, al_shift, au_shift, di_shift;
+extern int nX, nY, gX, gY, UNumber, FNumber, shift1, shift2, dshift;
 extern double lambda, gamma, beta;
 extern double* X, * Y;
 extern int* boundary;
